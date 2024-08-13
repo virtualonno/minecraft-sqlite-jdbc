@@ -1,6 +1,6 @@
 plugins {
     id "java"
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 group = 'pl.kosma'
@@ -8,7 +8,7 @@ archivesBaseName = "${project.library_name}"
 version = "${project.library_version}+${project.release_date}"
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(8)
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
 }
 repositories {
     mavenCentral()
@@ -16,26 +16,18 @@ repositories {
 
 dependencies {
     implementation "${project.library_maven_name}:${project.library_version}"
-    implementation(project(":forge-1.12")) { transitive = false }
-    implementation(project(":forge-1.13")) { transitive = false }
-    implementation(project(":forge-1.17")) { transitive = false }
-    implementation(project(":spigot")) { transitive = false }
 }
 
 processResources {
-    filesMatching(['fabric.mod.json', 'plugin.yml', 'mcmod.info', 'META-INF/mods.toml', 'pack.mcmeta']) {
+    filesMatching(['fabric.mod.json', 'pack.mcmeta']) {
         expand project.properties
     }
 }
 
 shadowJar {
     dependencies {
-        exclude("META-INF/versions/**") // can't have any classes higher than Java 8
         include(dependency("${project.library_maven_name}:.*"))
-        include(project(":forge-1.12"))
-        include(project(":forge-1.13"))
-        include(project(":forge-1.17"))
-        include(project(":spigot"))
+
     }
 }
 
